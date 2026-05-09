@@ -1,0 +1,1 @@
+from .researchModel import generalModel
