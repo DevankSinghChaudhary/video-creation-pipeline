@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-from playwright_stealth import stealth_sync
+from playwright_stealth import stealth
 from urllib.parse import quote
 import random
 import time
@@ -32,7 +32,7 @@ def search_web(data: dict, max_results_per_query: int = 10):
 
         page = browser.new_page()
 
-        stealth_sync(page)
+        stealth(page)
 
         for query in queries:
 
