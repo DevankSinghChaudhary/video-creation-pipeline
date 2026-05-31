@@ -1,2 +1,0 @@
-from .systemPrompt import researchSystemPrompt
-from .userPrompt import researcherPromptMaking
