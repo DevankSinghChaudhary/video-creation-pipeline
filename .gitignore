@@ -1,0 +1,30 @@
+# ENVIRONMENT
+.env
+/env
+.venv
+
+# PYTHON
+__pycache__/
+*.pyc
+*.pyo
+
+# Vector DB Storage
+qdrant_storage/
+chroma_db/
+vector_store/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Project Assets
+assets/
+downloads/
+renders/
+exports/
+videos/
+audio/
+
+
+core.egg-info/
