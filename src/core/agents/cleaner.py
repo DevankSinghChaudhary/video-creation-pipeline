@@ -1,15 +1,24 @@
 """Defines the cleaner agent which takes structured input and cleans the formatting while preserving the structure."""
 
 from langchain.agents import create_agent
+from langchain_openai import ChatOpenAI
 
-from core.schemas.cleaner import CleanerAgentOutput
+import os
+from dotenv import load_dotenv
+from core.schemas.state import state
 
-def cleaner_agent(model: str, prompt: str, CleanerAgentOutput: CleanerAgentOutput) -> CleanerAgentOutput:
-    """"Structured output for the cleaner agent."""
+def cleaner_agent_node(prompt: str, system_prompt) -> state:
+    load_dotenv()
+    
+    model = ChatOpenAI(
+        model = "nvidia/nemotron-3-ultra-550b-a55b",
+        base_url = "https://integrate.api.nvidia.com/v1",
+        api_key = os.getenv("NVIDIA_API_KEYC"),
+        )
     agent =create_agent(
         model = model,
-        system_prompt = "You are provided with structured input but you have to clean all the formatting from it, not in sense of structure but formatting like: REMOVE THESE('/n', '\n', '\n\n','\\n', '\\t','\\\\n', extra spaces, etc). Keep Bolding, Italic type formatting. Just clean the text and give me the cleaned version of the text. Don't change the structure of the text, just clean the formatting.",
-        response_format = CleanerAgentOutput
+        system_prompt = system_prompt,
+        response_format = state
         )
     
     result = agent.invoke({
@@ -19,4 +28,4 @@ def cleaner_agent(model: str, prompt: str, CleanerAgentOutput: CleanerAgentOutpu
         }]
     })
     
-    return result
+    return result['structured_response']

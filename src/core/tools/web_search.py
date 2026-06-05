@@ -1,119 +1,168 @@
-"""Browser-based web search tool using DuckDuckGo + Playwright for content extraction."""
+"""
+Multi-query hybrid web search tool:
+- DuckDuckGo batch search
+- Parallel HTTP fetching
+- Optional Playwright fallback
+- Shared caching layer
+"""
 
 from ddgs import DDGS
-from playwright.sync_api import sync_playwright
+import httpx
+import asyncio
+import time
+import hashlib
 from bs4 import BeautifulSoup
-
+from playwright.sync_api import sync_playwright
 from langchain.tools import tool
 
 # -------------------------
-# BROWSER MANAGER (REUSED)
+# GLOBAL CACHE
 # -------------------------
-class BrowserManager:
-    def __init__(self):
-        self.playwright = None
-        self.browser = None
+CACHE = {}
+CACHE_TTL = 60 * 60  # 1 hour
 
-    def start(self):
-        self.playwright = sync_playwright().start()
-        self.browser = self.playwright.chromium.launch(headless=True)
 
-    def new_page(self):
-        return self.browser.new_page()
+def cache_key(url: str):
+    return hashlib.md5(url.encode()).hexdigest()
 
-    def close(self):
-        if self.browser:
-            self.browser.close()
-        if self.playwright:
-            self.playwright.stop()
+
+def get_cache(url: str):
+    key = cache_key(url)
+    entry = CACHE.get(key)
+    if entry and time.time() - entry["time"] < CACHE_TTL:
+        return entry["data"]
+    return None
+
+
+def set_cache(url: str, data: str):
+    CACHE[cache_key(url)] = {
+        "time": time.time(),
+        "data": data
+    }
 
 
 # -------------------------
-# SEARCH URLs
+# SEARCH ENGINE (DDGS)
 # -------------------------
-def get_urls(query: str, max_results: int = 5):
+def get_urls(query: str, max_results: int = 3):
     urls = []
-
     with DDGS() as ddgs:
         for r in ddgs.text(query, max_results=max_results):
-            if isinstance(r, dict):
-                for key in ["href", "url", "link"]:
-                    if r.get(key):
-                        urls.append(r[key])
-                        break
-
+            for k in ["href", "url", "link"]:
+                if isinstance(r, dict) and r.get(k):
+                    urls.append(r[k])
+                    break
     return urls[:max_results]
 
 
 # -------------------------
-# CLEAN HTML
+# TEXT CLEANER
 # -------------------------
 def extract_text(html: str) -> str:
     soup = BeautifulSoup(html, "lxml")
 
-    # remove noise
-    for tag in soup(["script", "style", "noscript", "header", "footer", "nav", "form"]):
+    for tag in soup(["script", "style", "noscript", "header", "footer", "nav"]):
         tag.decompose()
 
     text = soup.get_text(separator="\n")
-
-    lines = [line.strip() for line in text.splitlines()]
-    cleaned = "\n".join(line for line in lines if line)
-
-    return cleaned
+    lines = [l.strip() for l in text.splitlines()]
+    return "\n".join([l for l in lines if l])[:3500]
 
 
 # -------------------------
-# MAIN TOOL FUNCTION
+# HTTP FETCH (FAST PATH)
 # -------------------------
-def search_web(query: str, max_results: int = 5) -> dict:
-    """
-    Search web using DuckDuckGo + extract pages using a reusable Playwright browser.
-    Returns structured results for LLM / RAG / agents.
-    """
+async def fetch_one(client, url):
+    try:
+        r = await client.get(url, timeout=10)
+        return url, r.text
+    except:
+        return url, ""
 
-    urls = get_urls(query, max_results)
 
+async def fetch_all(urls):
+    async with httpx.AsyncClient(
+        headers={"User-Agent": "Mozilla/5.0"},
+        follow_redirects=True
+    ) as client:
+        tasks = [fetch_one(client, u) for u in urls]
+        return await asyncio.gather(*tasks)
+
+
+# -------------------------
+# PLAYWRIGHT FALLBACK
+# -------------------------
+def fetch_browser(url):
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.goto(url, timeout=30000)
+            html = page.content()
+            browser.close()
+            return html
+    except:
+        return ""
+
+
+# -------------------------
+# SMART FETCH
+# -------------------------
+def process_urls(urls):
     results = []
 
-    bm = BrowserManager()
-    bm.start()
+    # fast HTTP batch
+    http_results = asyncio.run(fetch_all(urls))
 
-    try:
-        for url in urls:
-            try:
-                page = bm.new_page()
+    for url, html in http_results:
+        if not html:
+            continue
 
-                page.goto(url, timeout=30000)
-                html = page.content()
+        cached = get_cache(url)
+        if cached:
+            results.append({"url": url, "content": cached})
+            continue
 
-                text = extract_text(html)
+        text = extract_text(html)
+        set_cache(url, text)
 
-                results.append({
-                    "url": url,
-                    "content": text[:4000]  # safe context limit
-                })
+        results.append({"url": url, "content": text})
 
-                page.close()
+    return results
 
-            except Exception as e:
-                results.append({
-                    "url": url,
-                    "content": "",
-                    "error": str(e)
-                })
 
-    finally:
-        bm.close()
+# -------------------------
+# MAIN MULTI-QUERY TOOL
+# -------------------------
+def search_multi(queries: list[str], max_results: int = 3):
+    all_results = {}
+
+    for q in queries:
+        urls = get_urls(q, max_results=max_results)
+        results = process_urls(urls)
+
+        all_results[q] = results
 
     return {
-        "query": query,
-        "results": results
+        "queries": queries,
+        "results": all_results
     }
 
 
-@tool('web_search', description='Search the web for information.', return_direct=False)
-def web_search(query: str) -> str:
-    """Search the web for information."""
-    results = search_web(query)
-    return results
+# -------------------------
+# LANGCHAIN TOOL WRAPPER
+# -------------------------
+@tool("web_search", description="Multi-query hybrid web search tool", return_direct=False)
+def web_search(input: dict) -> dict:
+    """
+    Expected input:
+    {
+        "queries": ["query1", "query2", "query3"],
+        "max_results": 3
+    }
+    """
+
+    queries = input.get("queries", [])
+    max_results = input.get("max_results", 3)
+
+    return search_multi(queries, max_results)
