@@ -19,7 +19,7 @@ vector_store/
 *.sqlite3
 
 # Project Assets
-assets/
+
 downloads/
 renders/
 exports/

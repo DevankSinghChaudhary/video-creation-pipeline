@@ -29,28 +29,9 @@ Instead of relying on a single prompt, the pipeline uses multiple specialized AI
 ---
 
 ## Architecture
+> Rough Architecture
 
-```text
-Topic
-  │
-  ▼
-Perspective Agent
-  │
-  ▼
-Parallel Research Agents
-  │
-  ▼
-Knowledge Extraction
-  │
-  ▼
-Global Scene Generation
-  │
-  ▼
-Smaller Scenes Generation (5-10s)
-  │
-  ▼
-Video Production Pipeline (Secret)
-```
+![Rough Architecture](./gitassets/rough-sructure.png)
 
 ---
 
