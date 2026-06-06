@@ -5,11 +5,28 @@ from langchain_openai import ChatOpenAI
 
 import os
 from dotenv import load_dotenv
+from textwrap import dedent
+
 from core.schemas.state import state
 
-def cleaner_agent_node(prompt: str, system_prompt) -> state:
+
+
+def cleaner_agent_node(state: state) -> state:
     load_dotenv()
     
+    system_prompt = dedent(
+        f"""
+        TASK: Remove all formatting, if any.
+        Fomatting_example: '\\n', 'n', '\\', '\\\\' etc 
+        """
+        )
+
+    prompt = dedent(
+        f"""
+        DATA: {state['summary']}
+        """
+        )
+
     model = ChatOpenAI(
         model = "nvidia/nemotron-3-ultra-550b-a55b",
         base_url = "https://integrate.api.nvidia.com/v1",

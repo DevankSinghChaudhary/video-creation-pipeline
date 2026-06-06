@@ -10,7 +10,7 @@ from langchain_openai import ChatOpenAI
 from core.schemas.perspective import PerspectiveAgentOutput
 from core.schemas.state import state
 
-def perspective_agent_node(state: state):
+def planner(state: state):
     
     load_dotenv()
     topic = state['topic']
@@ -33,7 +33,7 @@ def perspective_agent_node(state: state):
         )
     
     model = ChatOpenAI(
-        model = 'nvidia/nemotron-3-ultra-550b-a55b',
+        model = 'mistralai/mistral-nemotron',
         base_url = 'https://integrate.api.nvidia.com/v1',
         api_key = os.getenv('NVIDIA_API_KEYP')
         )
@@ -51,9 +51,8 @@ def perspective_agent_node(state: state):
         }]
     })
     result = result['structured_response']
-    print('Time: ', time.time() - t)
-    return {'domains': result.domains}
-
-r = perspective_agent_node({'topic':'The rise of NVIDIA and the AI boom'})
-print(r)
-print(type(r))
+    print('Perspective: ', time.time() - t)
+    return {
+        'domains': result.domains, 
+        'perspectives': result.perspectives
+        }

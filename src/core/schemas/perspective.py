@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 
-class PerspectiveAgentOutput(BaseModel):
+class schema(BaseModel):
     """Schema for the output of the perspective agent."""
-    domains: list[str]
-    perspectives: list[str]
+    title: str
+    goal: str
+
+class PerspectiveAgentOutput(BaseModel):
+    topic: str
+    domain: list[schema]
