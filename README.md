@@ -43,13 +43,13 @@ Parallel Research Agents
 Knowledge Extraction
   │
   ▼
-Vector Database
+Global Scene Generation
   │
   ▼
-Script Generation
+Smaller Scenes Generation (5-10s)
   │
   ▼
-Video Production Pipeline
+Video Production Pipeline (Secret)
 ```
 
 ---
@@ -86,8 +86,12 @@ Parallel Domain Research
     ↓
 Knowledge Storage
     ↓
-Script Writing
+Global Scene Writing
     ↓
+Smaller Scenes Writing
+    ↓
+Script Writing
+    ↓    
 Video Generation
 ```
 
@@ -127,31 +131,22 @@ Video Generation
 * [ ] Multi-Pass Script Writing
 * [ ] Narrative Optimization
 
-### Video Layer
-
-* [ ] Asset Retrieval
-* [ ] Voice Generation
-* [ ] Scene Planning
-* [ ] Automated Video Rendering
-
 ---
 
 ## Running
 
 ```bash
+git clone https://github.com/DevankSinghChaudhary/video-creation-pipeline
+cd video-creation-pipeline
 uv run main.py
 ```
 
----
-
-## Author
-
-**Devank Singh Chaudhary**
-
-Instagram: https://instagram.com/devanksinghchaudhary
-
-X/Twitter: https://x.com/@devank0 
 
 ---
 
-Powered by NVIDIA NIM and LangGraph.
+## Author: 
+**Devank Singh Chaudhary** \
+[Instagram](https://instagram.com/devanksinghchaudhary) \
+[X/Twitter](https://x.com/@devank0) \
+[Email Me](mailto:devanksinghchaudhary@gmail.com)
+
