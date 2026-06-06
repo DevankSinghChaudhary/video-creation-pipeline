@@ -31,7 +31,7 @@ Instead of relying on a single prompt, the pipeline uses multiple specialized AI
 ## Architecture
 > Rough Architecture
 
-![Rough Architecture](./gitassets/rough-sructure.png)
+<img src="./gitassets/rough-structure.png" alt="Rough Structure" style="border-radius: 10px;">
 
 ---
 
