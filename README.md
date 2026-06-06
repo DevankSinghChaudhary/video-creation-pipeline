@@ -1,6 +1,6 @@
 **Language:** English
 
-# 🎬 Video Generating Pipeline
+# Video Generating Pipeline
 
 AI-powered documentary and educational video generation pipeline built with LangGraph and NVIDIA NIM.
 
@@ -9,7 +9,7 @@ AI-powered documentary and educational video generation pipeline built with Lang
 [![NVIDIA NIM](https://img.shields.io/badge/Powered%20by-NVIDIA%20NIM-76B900)](https://build.nvidia.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
-[![Instagram](https://img.shields.io/badge/Owner-Follow-E4405F?logo=instagram\&logoColor=white)](https://instagram.com/devanksinghchaudhary)
+[![Instagram](https://img.shields.io/badge/Creator-Follow-E4405F?logo=instagram\&logoColor=white)](https://instagram.com/devanksinghchaudhary)
 
 ---
 
