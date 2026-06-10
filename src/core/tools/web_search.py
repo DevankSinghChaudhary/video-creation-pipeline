@@ -1,25 +1,18 @@
-"""
-Multi-query hybrid web search tool:
-- DuckDuckGo batch search
-- Parallel HTTP fetching
-- Optional Playwright fallback
-- Shared caching layer
-"""
+import asyncio
+import hashlib
+import time
 
+from bs4 import BeautifulSoup
 from ddgs import DDGS
 import httpx
-import asyncio
-import time
-import hashlib
-from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright
 from langchain.tools import tool
 
-# -------------------------
-# GLOBAL CACHE
-# -------------------------
+# --------------------------------------------------
+# CACHE
+# --------------------------------------------------
+
 CACHE = {}
-CACHE_TTL = 60 * 60  # 1 hour
+CACHE_TTL = 3600
 
 
 def cache_key(url: str):
@@ -27,142 +20,285 @@ def cache_key(url: str):
 
 
 def get_cache(url: str):
-    key = cache_key(url)
-    entry = CACHE.get(key)
-    if entry and time.time() - entry["time"] < CACHE_TTL:
-        return entry["data"]
-    return None
+    item = CACHE.get(cache_key(url))
+
+    if not item:
+        return None
+
+    if time.time() - item["time"] > CACHE_TTL:
+        return None
+
+    return item["data"]
 
 
 def set_cache(url: str, data: str):
     CACHE[cache_key(url)] = {
         "time": time.time(),
-        "data": data
+        "data": data,
     }
 
 
-# -------------------------
-# SEARCH ENGINE (DDGS)
-# -------------------------
-def get_urls(query: str, max_results: int = 3):
-    urls = []
-    with DDGS() as ddgs:
-        for r in ddgs.text(query, max_results=max_results):
-            for k in ["href", "url", "link"]:
-                if isinstance(r, dict) and r.get(k):
-                    urls.append(r[k])
-                    break
-    return urls[:max_results]
+# --------------------------------------------------
+# CLEAN HTML
+# --------------------------------------------------
 
-
-# -------------------------
-# TEXT CLEANER
-# -------------------------
 def extract_text(html: str) -> str:
     soup = BeautifulSoup(html, "lxml")
 
-    for tag in soup(["script", "style", "noscript", "header", "footer", "nav"]):
+    for tag in soup(
+        [
+            "script",
+            "style",
+            "noscript",
+            "header",
+            "footer",
+            "nav",
+            "svg",
+        ]
+    ):
         tag.decompose()
 
     text = soup.get_text(separator="\n")
-    lines = [l.strip() for l in text.splitlines()]
-    return "\n".join([l for l in lines if l])[:3500]
+
+    lines = [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip()
+    ]
+
+    return "\n".join(lines)[:5000]
 
 
-# -------------------------
-# HTTP FETCH (FAST PATH)
-# -------------------------
-async def fetch_one(client, url):
+# --------------------------------------------------
+# NORMALIZE LLM INPUT
+# --------------------------------------------------
+
+def normalize_queries(raw_queries) -> list[str]:
+    """
+    Handles:
+    ["AI"]
+    [{"query":"AI"}]
+    [{"title":"AI"}]
+    """
+
+    normalized = []
+
+    for item in raw_queries:
+
+        if isinstance(item, str):
+            normalized.append(item)
+            continue
+
+        if isinstance(item, dict):
+
+            if "query" in item:
+                normalized.append(item["query"])
+                continue
+
+            if "title" in item:
+                normalized.append(item["title"])
+                continue
+
+            normalized.append(str(item))
+            continue
+
+        normalized.append(str(item))
+
+    return normalized
+
+
+# --------------------------------------------------
+# DDGS SEARCH
+# --------------------------------------------------
+
+async def get_urls_async(
+    query: str,
+    max_results: int = 3,
+):
+
+    def search():
+
+        urls = []
+
+        try:
+            with DDGS() as ddgs:
+
+                for result in ddgs.text(
+                    query,
+                    max_results=max_results,
+                ):
+
+                    for key in (
+                        "href",
+                        "url",
+                        "link",
+                    ):
+
+                        value = result.get(key)
+
+                        if value:
+                            urls.append(value)
+                            break
+
+        except Exception:
+            pass
+
+        return urls[:max_results]
+
+    return await asyncio.to_thread(search)
+
+
+# --------------------------------------------------
+# FETCH PAGE
+# --------------------------------------------------
+
+async def fetch_page(
+    client: httpx.AsyncClient,
+    url: str,
+):
+
+    cached = get_cache(url)
+
+    if cached:
+        return {
+            "url": url,
+            "content": cached,
+        }
+
     try:
-        r = await client.get(url, timeout=10)
-        return url, r.text
-    except:
-        return url, ""
+
+        response = await client.get(
+            url,
+            timeout=8,
+        )
+
+        if response.status_code == 200:
+
+            content = extract_text(
+                response.text
+            )
+
+            set_cache(
+                url,
+                content,
+            )
+
+            return {
+                "url": url,
+                "content": content,
+            }
+
+    except Exception:
+        pass
+
+    return {
+        "url": url,
+        "content": "",
+    }
 
 
-async def fetch_all(urls):
+# --------------------------------------------------
+# SEARCH PIPELINE
+# --------------------------------------------------
+
+async def search_multi_async(
+    queries,
+    max_results: int = 3,
+):
+
+    queries = normalize_queries(
+        queries
+    )
+
+    # SEARCH PHASE
+
+    url_lists = await asyncio.gather(
+        *[
+            get_urls_async(
+                q,
+                max_results,
+            )
+            for q in queries
+        ]
+    )
+
+    query_map = {
+        query: urls
+        for query, urls in zip(
+            queries,
+            url_lists,
+        )
+    }
+
+    # UNIQUE URLS
+
+    unique_urls = list(
+        {
+            url
+            for urls in url_lists
+            for url in urls
+        }
+    )
+
+    limits = httpx.Limits(
+        max_connections=100,
+        max_keepalive_connections=30,
+    )
+
     async with httpx.AsyncClient(
-        headers={"User-Agent": "Mozilla/5.0"},
-        follow_redirects=True
+        follow_redirects=True,
+        limits=limits,
+        headers={
+            "User-Agent":
+            "Mozilla/5.0"
+        },
+        http2=True,
     ) as client:
-        tasks = [fetch_one(client, u) for u in urls]
-        return await asyncio.gather(*tasks)
 
+        page_results = await asyncio.gather(
+            *[
+                fetch_page(
+                    client,
+                    url,
+                )
+                for url in unique_urls
+            ]
+        )
 
-# -------------------------
-# PLAYWRIGHT FALLBACK
-# -------------------------
-def fetch_browser(url):
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-            page.goto(url, timeout=30000)
-            html = page.content()
-            browser.close()
-            return html
-    except:
-        return ""
+    url_map = {
+        item["url"]: item
+        for item in page_results
+    }
 
+    final_results = {}
 
-# -------------------------
-# SMART FETCH
-# -------------------------
-def process_urls(urls):
-    results = []
+    for query in queries:
 
-    # fast HTTP batch
-    http_results = asyncio.run(fetch_all(urls))
-
-    for url, html in http_results:
-        if not html:
-            continue
-
-        cached = get_cache(url)
-        if cached:
-            results.append({"url": url, "content": cached})
-            continue
-
-        text = extract_text(html)
-        set_cache(url, text)
-
-        results.append({"url": url, "content": text})
-
-    return results
-
-
-# -------------------------
-# MAIN MULTI-QUERY TOOL
-# -------------------------
-def search_multi(queries: list[str], max_results: int = 3):
-    all_results = {}
-
-    for q in queries:
-        urls = get_urls(q, max_results=max_results)
-        results = process_urls(urls)
-
-        all_results[q] = results
+        final_results[query] = [
+            url_map[url]
+            for url in query_map[query]
+            if url_map[url]["content"]
+        ]
 
     return {
         "queries": queries,
-        "results": all_results
+        "results": final_results,
     }
 
 
-# -------------------------
-# LANGCHAIN TOOL WRAPPER
-# -------------------------
+# --------------------------------------------------
+# TOOL
+# --------------------------------------------------
+
 @tool("web_search", description="Multi-query hybrid web search tool", return_direct=False)
-def web_search(input: dict) -> dict:
-    """
-    Expected input:
-    {
-        "queries": ["query1", "query2", "query3"],
-        "max_results": 3
-    }
-    """
+def web_search(
+    queries: list[str],
+    max_results: int = 3,
+):
 
-    queries = input.get("queries", [])
-    max_results = input.get("max_results", 3)
-
-    return search_multi(queries, max_results)
+    return asyncio.run(
+        search_multi_async(
+            queries,
+            max_results,
+        )
+    )

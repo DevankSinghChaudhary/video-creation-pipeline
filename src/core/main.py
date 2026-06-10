@@ -1,55 +1,65 @@
 """Main entry point of the pipeline."""
 
-import time
+from langgraph.graph import START, END, StateGraph
 
-from langgraph.graph import StateGraph, START, END
+from core.nodes.research import research_node
 
-from core.agents.plan import planner
-from core.agents.research import researcher, fan_out_node
-from core.agents.compile import compiler
 
-from core.schemas.state import state
 
-#===========================
-# IMPORTS ↑
-# ==========================
+def main():
 
-def ask():
-    while True:
-        topic = input("Enter Video Topic: ")
-        if topic.strip() != "":
-            return topic
-        print("Topic cannot be empty. Please enter a valid topic.")
+    builder = StateGraph() 
+    builder.add_node('researher', research_node)
 
-topic = ask()
+    builder.add_edge(START, 'researcher')
+    builder.add_edge('researcher', END)
+
+    graph = builder.compile()
+    
+    
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #GRAPH
 
-builder = StateGraph(state)
+# builder = StateGraph(state)
 
-builder.add_node('perspective', planner)
-builder.add_node('researcher', researcher)
-builder.add_node('compiler', compiler)
-
-
-builder.add_edge(START, 'perspective')
-builder.add_conditional_edges('perspective', fan_out_node)
-builder.add_edge('researcher', 'compiler')
-builder.add_edge('compiler', END)
+# builder.add_node('perspective', planner)
+# builder.add_node('researcher', researcher)
+# builder.add_node('compiler', compiler)
 
 
-graph = builder.compile()
+# builder.add_edge(START, 'perspective')
+# builder.add_conditional_edges('perspective', fan_out_node)
+# builder.add_edge('researcher', 'compiler')
+# builder.add_edge('compiler', END)
 
-t = time.time()
-result = graph.invoke(
-    {
-        "topic": topic,
-        "domains": [],
-        "perspectives": [],
-        "summaries": [],
-        "final_report": ""
-    }
-)
-print('Total Agents Time: ', time.time() - t)
-print(result)
+
+# graph = builder.compile()
+
+# t = time.time()
+# result = graph.invoke(
+#     {
+#         "topic": topic,
+#         "domains": [],
+#         "perspectives": [],
+#         "summaries": [],
+#         "final_report": ""
+#     }
+# )
+# print('Total Agents Time: ', time.time() - t)
+# print(result)

@@ -6,6 +6,6 @@ from pydantic import BaseModel
 #============
 # Research Agent Output Structure
 #============
-class ResearchState(BaseModel):
+class Researchstate(BaseModel):
     domain: str
     domain_info_summary: str
