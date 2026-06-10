@@ -4,10 +4,11 @@
 
 AI-powered documentary and educational video generation pipeline built with LangGraph and NVIDIA NIM.
 
-[![Python](https://img.shields.io/badge/Python-3.12+-blue)]()
-[![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-green)]()
-[![NVIDIA NIM](https://img.shields.io/badge/Powered%20by-NVIDIA%20NIM-76B900)](https://build.nvidia.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow)]()
+[![Python](https://img.shields.io/badge/Python-3.12+-blue?logo=python&logoColor=white)](https://www.python.otg)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-blue?logo=langgraph&logoColor=skyblue)](https://langchain.com/langgraph)
+[![NVIDIA NIM](https://img.shields.io/badge/Built%20with-NVIDIA%20NIM-76B900?logo=nvidia&logoColor=green)](https://build.nvidia.com)
+[![Mistral AI](https://img.shields.io/badge/Built%20with-Mistral%20AI-9B59B6?logo=mistralai&logoColor=orange)](https://mistral.ai/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?logo=https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/MIT_logo.svg/1200px-MIT_logo.svg.png&logoColor=white)]()
 
 [![Instagram](https://img.shields.io/badge/Creator-Follow-E4405F?logo=instagram\&logoColor=white)](https://instagram.com/devanksinghchaudhary)
 
