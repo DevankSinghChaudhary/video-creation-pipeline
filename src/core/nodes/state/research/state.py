@@ -1,14 +1,22 @@
 from typing import TypedDict
-from pydantic import BaseModel, Field
-from datetime import date
+from pydantic import BaseModel
+from core.nodes.state.director.state import DirectorState
 
-class event(BaseModel):
-    name: str
-    date: date
+class summary(BaseModel):
+    title: str
+    summary: str
 
 class PlannerState(BaseModel):
     info_sources: list[str]
-    summary_of_information: str
-    any_event: bool
-    if_any_event: list[event]
+    summary_of_information: list[summary]
 
+class script_breakdown(BaseModel):
+    id: int
+    script: str
+
+class ScriptState(BaseModel):
+    script_: list[script_breakdown]
+
+
+class VisualState(BaseModel):
+    visual: list[str] 

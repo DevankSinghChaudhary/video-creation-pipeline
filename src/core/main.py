@@ -1,65 +1,49 @@
 """Main entry point of the pipeline."""
+import time
 
-from langgraph.graph import START, END, StateGraph
+from langgraph.graph import StateGraph, START, END
 
-from core.nodes.research import research_node
+from core.nodes.state.globalstate import GlobalInformationState 
+from core.nodes.research.agent.plan import planner
+from core.nodes.research.agent.script import writer
+from core.nodes.director.agent.illustrator import illustrator
+from core.nodes.director.agent.director import director
+from core.nodes.layout.layoutplanner import layoutplanner
 
+from core.user import user_input
 
+def main(state: GlobalInformationState):
+    
+    st = time.time()
 
-def main():
+    builder = StateGraph(state)
 
-    builder = StateGraph() 
-    builder.add_node('researher', research_node)
+    builder.add_node('planner', planner)
+    builder.add_node('writer', writer)
+    builder.add_node('illustrator', illustrator)
+    builder.add_node('director', director)
+    builder.add_node('layout', layoutplanner)
 
-    builder.add_edge(START, 'researcher')
-    builder.add_edge('researcher', END)
+    builder.add_edge(START, 'planner')
+    builder.add_edge('planner', 'writer')
+    builder.add_edge('writer', 'illustrator')
+    builder.add_edge('illustrator', 'director')
+    builder.add_edge('director', 'layout')
+    builder.add_edge('layout', END)
 
     graph = builder.compile()
-    
-    
+
+    topic = user_input()
+    result = graph.invoke({
+        'topic': topic,
+        'information': [],
+        'script': [],
+        'visual': [],
+        'layout': []
+        })
+    print(f'Total Time: {time.time()-st}')
+    return result
+
+
 if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#GRAPH
-
-# builder = StateGraph(state)
-
-# builder.add_node('perspective', planner)
-# builder.add_node('researcher', researcher)
-# builder.add_node('compiler', compiler)
-
-
-# builder.add_edge(START, 'perspective')
-# builder.add_conditional_edges('perspective', fan_out_node)
-# builder.add_edge('researcher', 'compiler')
-# builder.add_edge('compiler', END)
-
-
-# graph = builder.compile()
-
-# t = time.time()
-# result = graph.invoke(
-#     {
-#         "topic": topic,
-#         "domains": [],
-#         "perspectives": [],
-#         "summaries": [],
-#         "final_report": ""
-#     }
-# )
-# print('Total Agents Time: ', time.time() - t)
-# print(result)
+    print(main(GlobalInformationState))

@@ -5,7 +5,8 @@ from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 
-from core.nodes.state.research.plannerstate import GlobalInformationState, ScriptState
+from core.nodes.state.research.state import ScriptState
+from core.nodes.state.globalstate import GlobalInformationState
 from core.prompt import get_systemprompt
 
 load_dotenv()

@@ -11,7 +11,10 @@ from langchain.agents import create_agent
 from core.prompt import get_systemprompt 
 from core.tools.web_search import web_search
 from core.tools.date_time import get_date_time
-from core.nodes.state.research.plannerstate import GlobalInformationState, PlannerState  
+from core.nodes.state.research.state import PlannerState  
+from core.nodes.state.globalstate import GlobalInformationState
+
+
 
 load_dotenv()
 model = ChatOpenAI(
@@ -38,9 +41,7 @@ def planner(state: GlobalInformationState):
         2. Sequential Flow.
         3. Zero-Hallucination about the topic.
         """
-        )    
-
-
+        )
     agent = create_agent(
         model = model,
         system_prompt = system_prompt,

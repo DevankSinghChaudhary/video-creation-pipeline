@@ -6,7 +6,8 @@ from textwrap import dedent
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 
-from core.nodes.state.research.plannerstate import GlobalInformationState, VisualState
+from core.nodes.state.research.state import VisualState
+from core.nodes.state.globalstate import GlobalInformationState
 from core.prompt import get_systemprompt
 
 load_dotenv()
@@ -16,9 +17,9 @@ model = ChatOpenAI(
     api_key = os.getenv('MISTRALAI_API_KEY')
 )
 
-system_prompt = get_systemprompt("Illustrator")
+system_prompt = get_systemprompt("illustrator")
 
-def Illustrator(state: GlobalInformationState ):
+def illustrator(state: GlobalInformationState ):
     topic = state['topic']
     information = state['information']
     script = state['script']

@@ -1,5 +1,9 @@
 **Language:** English
 
+## NOTE(MUST READ):
+CONTENT IN THIS README IS OUTDATED, I CHANGED THE STRUCTURE OF PIPELINE. I AM TOO LAZY TO WHOLE README.
+> THANK YOU FOR COOPERATION.
+
 # Video Generating Pipeline
 
 AI-powered documentary and educational video generation pipeline built with LangGraph and NVIDIA NIM.
