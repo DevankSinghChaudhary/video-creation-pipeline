@@ -19,7 +19,7 @@ model = ChatOpenAI(
 
 system_prompt = get_systemprompt("director")
 
-def director(state: GlobalInformationState):
+def Director(state: GlobalInformationState):
     topic = state['topic']
     script = state['script']
     visuals = state['visual']

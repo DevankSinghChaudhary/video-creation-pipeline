@@ -21,7 +21,7 @@ model = ChatOpenAI(
 
 system_prompt = get_systemprompt('layoutplanner')
 
-def layoutplanner(state: GlobalInformationState):
+def Layoutplanner(state: GlobalInformationState):
     topic = state['topic']
     script  = state['script']
 

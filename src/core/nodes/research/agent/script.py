@@ -18,7 +18,7 @@ model = ChatOpenAI(
 
 system_prompt = get_systemprompt("writer")
 
-def writer(state: GlobalInformationState):
+def Writer(state: GlobalInformationState):
     topic = state['topic']
     information = state['information']
 

@@ -19,7 +19,7 @@ model = ChatOpenAI(
 
 system_prompt = get_systemprompt("illustrator")
 
-def illustrator(state: GlobalInformationState ):
+def Illustrator(state: GlobalInformationState ):
     topic = state['topic']
     information = state['information']
     script = state['script']

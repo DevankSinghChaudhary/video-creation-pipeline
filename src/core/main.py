@@ -4,27 +4,32 @@ import time
 from langgraph.graph import StateGraph, START, END
 
 from core.nodes.state.globalstate import GlobalInformationState 
-from core.nodes.research.agent.plan import planner
-from core.nodes.research.agent.script import writer
-from core.nodes.director.agent.illustrator import illustrator
-from core.nodes.director.agent.director import director
-from core.nodes.layout.layoutplanner import layoutplanner
-from core.nodes.layout.worldlayout import worldplanner
+from core.nodes.research.agent.plan import Planner
+from core.nodes.research.agent.script import Writer
+from core.nodes.audio.voice import Voice, FanoutScript
+from core.nodes.director.agent.illustrator import Illustrator
+from core.nodes.director.agent.director import Director
+from core.nodes.layout.layoutplanner import Layoutplanner
+from core.nodes.layout.worldlayout import Worldplanner
 
 from core.user import user_input
+
+
+
 
 def main(state: GlobalInformationState):
     
 
     builder = StateGraph(state)
 
-    builder.add_node('planner', planner)
-    builder.add_node('writer', writer)
+    builder.add_node('Planner', Planner)
+    builder.add_node('Writer', Writer)
+    builder.add_node('Voice', Voice)
 
-
-    builder.add_edge(START, 'planner')
-    builder.add_edge('planner', 'writer')
-    builder.add_edge('writer', END)
+    builder.add_edge(START, 'Planner')
+    builder.add_edge('Planner', 'Writer')
+    builder.add_conditional_edges('Writer', FanoutScript)
+    builder.add_edge('Voice', END)
 
     graph = builder.compile()
 
@@ -42,7 +47,4 @@ def main(state: GlobalInformationState):
 
 if __name__ == "__main__":
     state = main(GlobalInformationState)
-    for scene in state["script"].script_:
-        print(scene.script)
-        print()
-        print()
+    print(state)

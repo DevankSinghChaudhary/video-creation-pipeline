@@ -22,7 +22,7 @@ system_prompt = get_systemprompt('worldplanner')
 
 
 
-def worldplanner(state: GlobalInformationState):
+def Worldplanner(state: GlobalInformationState):
     topic = state['topic']
     visuals = state['visual']
     information = state['information']

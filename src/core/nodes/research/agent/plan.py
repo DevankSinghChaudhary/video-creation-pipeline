@@ -24,7 +24,7 @@ model = ChatOpenAI(
 )
 system_prompt = get_systemprompt("planner")
 
-def planner(state: GlobalInformationState):
+def Planner(state: GlobalInformationState):
 
     topic = state['topic']
 
