@@ -56,7 +56,7 @@ def planner(state: GlobalInformationState):
             'content': prompt
         }]
     })
-    result = result["structured_response"]
+    result = result['messages'][-1].content
     print('Planner: ', time.time() - t)
     return {
         'information': result

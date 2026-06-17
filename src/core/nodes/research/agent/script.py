@@ -31,6 +31,7 @@ def writer(state: GlobalInformationState):
 
     TASK:
     Write a compelling documentary-style narration script using ONLY the information provided.
+    Dont write script as different for each ID but instead, full 30-40s script speard across those IDs, not in one whole paragraph.
 
     GOAL:
     Create a script suitable for a 30-40 second short-form documentary video.
@@ -39,6 +40,7 @@ def writer(state: GlobalInformationState):
     {information}
 
     RULES:
+    DO NOT INCLUDE ANY KIND OF FORMATTING ETC
 
     * Use only information from the provided research.
     * Never invent facts, dates, statistics, quotes, or events.
@@ -51,9 +53,12 @@ def writer(state: GlobalInformationState):
     * Do not mention sources.
     * Do not use bullet points.
     * Do not use headings.
+    * Do not use generic AI phrases.
     * Do not include scene descriptions.
     * Do not include camera instructions.
     * Do not include timestamps.
+    * Do not add colon.
+    
 
     STYLE:
 
@@ -64,6 +69,12 @@ def writer(state: GlobalInformationState):
     * Build curiosity and momentum.
     * Use active voice whenever possible.
     * Make complex topics understandable to a general audience.
+    * Don't use very hard words, can be hard but not like only literature writer could understand.
+    * Dont use very simple language either.
+    * Make Balance like explainer does.
+
+    EXAMPLE: (Do no try to relate any user request to this example, this is just purely for narrative sounding refrence) 'Generate script normally'
+    'Over the past few years, these drugs have been claiming more and more lives across the EU. A perfect storm is brewing caused by a political power shift in Afghanistan, changing smuggling routes, and the emergence of clandestine Chinese laboratories pushing new and harder synthetic drugs. Drugs that are cheaper, sometimes openly available on the clear net, and more potent than almost anything we've seen before. Is Europe ready for what's coming?'
 
     STRUCTURE:
 

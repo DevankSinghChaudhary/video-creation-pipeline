@@ -23,9 +23,7 @@ system_prompt = get_systemprompt('layoutplanner')
 
 def layoutplanner(state: GlobalInformationState):
     topic = state['topic']
-    information = state['information']
     script  = state['script']
-    visuals = state['visual']
 
 
     prompt = dedent(
@@ -34,17 +32,9 @@ def layoutplanner(state: GlobalInformationState):
 
         {topic}
 
-        # Research Information
-
-        {information}
-
         # Narration Script
 
         {script}
-
-        # Visual Concepts
-
-        {visuals}
 
         # Aspect Ratio
 

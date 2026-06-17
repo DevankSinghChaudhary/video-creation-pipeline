@@ -9,41 +9,40 @@ from core.nodes.research.agent.script import writer
 from core.nodes.director.agent.illustrator import illustrator
 from core.nodes.director.agent.director import director
 from core.nodes.layout.layoutplanner import layoutplanner
+from core.nodes.layout.worldlayout import worldplanner
 
 from core.user import user_input
 
 def main(state: GlobalInformationState):
     
-    st = time.time()
 
     builder = StateGraph(state)
 
     builder.add_node('planner', planner)
     builder.add_node('writer', writer)
-    builder.add_node('illustrator', illustrator)
-    builder.add_node('director', director)
-    builder.add_node('layout', layoutplanner)
+
 
     builder.add_edge(START, 'planner')
     builder.add_edge('planner', 'writer')
-    builder.add_edge('writer', 'illustrator')
-    builder.add_edge('illustrator', 'director')
-    builder.add_edge('director', 'layout')
-    builder.add_edge('layout', END)
+    builder.add_edge('writer', END)
 
     graph = builder.compile()
 
     topic = user_input()
+    st = time.time()
     result = graph.invoke({
         'topic': topic,
         'information': [],
-        'script': [],
-        'visual': [],
-        'layout': []
+        'script': []
         })
+    
     print(f'Total Time: {time.time()-st}')
     return result
 
 
 if __name__ == "__main__":
-    print(main(GlobalInformationState))
+    state = main(GlobalInformationState)
+    for scene in state["script"].script_:
+        print(scene.script)
+        print()
+        print()

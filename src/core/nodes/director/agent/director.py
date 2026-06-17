@@ -24,6 +24,7 @@ def director(state: GlobalInformationState):
     script = state['script']
     visuals = state['visual']
     information = state['information']
+    
 
 
     prompt = dedent(

@@ -1,15 +1,22 @@
 from pydantic import BaseModel
-from typing import Literal
-
 
 class Asset(BaseModel):
     name: str
-    role: Literal["primary", "secondary", "support"]
-    scene_id: int
-    importance: int
+    role: str
+    purpose: str
+
+class SceneAsset(BaseModel):
+    asset: Asset
     x: float
     y: float
     z: float
 
+class SceneLayout(BaseModel):
+    scene_id: int
+    title: str
+    width: float
+    height: float
+    assets: list[SceneAsset]
+
 class layoutstate(BaseModel):
-    layout: list[Asset]
+    scenes: list[SceneLayout]
