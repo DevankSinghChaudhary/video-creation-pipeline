@@ -42,6 +42,7 @@ def Writer(state: GlobalInformationState):
     RULES:
     DO NOT INCLUDE ANY KIND OF FORMATTING ETC
 
+    * Do not use very hard or very basic narration.
     * Use only information from the provided research.
     * Never invent facts, dates, statistics, quotes, or events.
     * Prioritize the most important and interesting information.
@@ -72,6 +73,7 @@ def Writer(state: GlobalInformationState):
     * Don't use very hard words, can be hard but not like only literature writer could understand.
     * Dont use very simple language either.
     * Make Balance like explainer does.
+    * Use Full Stops etc.
 
     EXAMPLE: (Do no try to relate any user request to this example, this is just purely for narrative sounding refrence) 'Generate script normally'
     'Over the past few years, these drugs have been claiming more and more lives across the EU. A perfect storm is brewing caused by a political power shift in Afghanistan, changing smuggling routes, and the emergence of clandestine Chinese laboratories pushing new and harder synthetic drugs. Drugs that are cheaper, sometimes openly available on the clear net, and more potent than almost anything we've seen before. Is Europe ready for what's coming?'
@@ -84,7 +86,7 @@ def Writer(state: GlobalInformationState):
 
     LENGTH:
 
-    * Target 90-120 words.
+    * Target 90-120 words all over Ids, like if 5 IDS then each ID will contain around 24 words. 
     * Maximum 140 words.
 
     OUTPUT:

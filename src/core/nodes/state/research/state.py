@@ -15,8 +15,11 @@ class script_breakdown(BaseModel):
     script: str
 
 class ScriptState(BaseModel):
+    script: list[str]
+
+class FormatterState(BaseModel):
     script_: list[script_breakdown]
 
 
 class VisualState(BaseModel):
-    visual: list[str] 
+    visual: list[str]
