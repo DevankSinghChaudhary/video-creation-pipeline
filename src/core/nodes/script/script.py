@@ -24,73 +24,95 @@ def Writer(state: GlobalInformationState):
 
 
     prompt = f"""
-    You are an elite documentary scriptwriter.
-
-    TOPIC:
-    {topic}
+    ROLE:
+    Elite documentary narration engine.
 
     TASK:
-    Write a compelling documentary-style narration script using ONLY the information provided.
-    Dont write script as different for each ID but instead, full 30-40s script speard across those IDs, not in one whole paragraph.
+    Convert provided structured research units into a single continuous documentary narration.
 
-    GOAL:
-    Create a script suitable for a 30-40 second short-form documentary video.
+    CORE RULE:
+    Use ONLY provided information. No invention. No stylistic padding. No external knowledge.
 
-    INFORMATION:
-    {information}
+    SPOKEN REALISM RULE:
+    The output must sound like natural spoken documentary narration, not written explanation.
 
-    RULES:
-    DO NOT INCLUDE ANY KIND OF FORMATTING ETC
+    To achieve this:
 
-    * Do not use very hard or very basic narration.
-    * Use only information from the provided research.
-    * Never invent facts, dates, statistics, quotes, or events.
-    * Prioritize the most important and interesting information.
-    * Focus on one clear narrative.
-    * Every sentence must provide new information.
-    * Avoid repetition.
-    * Avoid filler phrases.
-    * Do not include introductions, greetings, or calls to action.
-    * Do not mention sources.
-    * Do not use bullet points.
-    * Do not use headings.
-    * Do not use generic AI phrases.
-    * Do not include scene descriptions.
-    * Do not include camera instructions.
-    * Do not include timestamps.
-    * Do not add colon.
+    Vary sentence length (short, medium, slightly extended)
+    Allow 1-2 sentence fusions when facts are tightly related
+    Do NOT make every sentence equal in weight
+    Avoid explicit “this led to that” explanation chains unless necessary
+    Prefer implication over over-explanation when causality is obvious from context
+    Reduce repetitive grammatical structures across consecutive sentences
+
+    ❌ BAN LIST (STRONG ADDITION)
+
+    Remove these patterns entirely:
+    “This X marked Y”
+    “It also made a decision”
+    “That alliance had been built on…”
+    “The question is no longer X—but Y” (overused AI documentary closure form)
+    symmetrical sentence chaining (“A happened. B happened. C happened.” rhythm)
     
+    HARD CONSTRAINTS:
 
-    STYLE:
+    30-40 seconds spoken duration
+    90-120 words target
+    max 140 words absolute
+    one unified narration (NOT per ID breakdown in output)
+    no formatting, no labels, no structure markers
 
-    * Documentary narrator.
-    * Concise and information-dense.
-    * Clear and engaging.
-    * Professional and authoritative.
-    * Build curiosity and momentum.
-    * Use active voice whenever possible.
-    * Make complex topics understandable to a general audience.
-    * Don't use very hard words, can be hard but not like only literature writer could understand.
-    * Dont use very simple language either.
-    * Make Balance like explainer does.
-    * Use Full Stops etc.
+    CONTENT RULES:
 
-    EXAMPLE: (Do no try to relate any user request to this example, this is just purely for narrative sounding refrence) 'Generate script normally'
-    'Over the past few years, these drugs have been claiming more and more lives across the EU. A perfect storm is brewing caused by a political power shift in Afghanistan, changing smuggling routes, and the emergence of clandestine Chinese laboratories pushing new and harder synthetic drugs. Drugs that are cheaper, sometimes openly available on the clear net, and more potent than almost anything we've seen before. Is Europe ready for what's coming?'
+    Every sentence must introduce new factual information
+    No repetition or paraphrasing of same idea
+    No filler, no setup phrases, no commentary language
+    No generic documentary phrases (“this reveals”, “this highlights”, “it is important to note”)
+    No emotional framing unless explicitly in data
+    No rhetorical questions
+    No transitions like “meanwhile”, “in turn”, “today”, unless factually required
 
-    STRUCTURE:
+    FIRST SENTENCE RULE (STRICT):
+    Must begin with:
 
-    1. Start with the most surprising, important, or impactful fact.
-    2. Explain the key development, event, or mechanism.
-    3. End with the broader significance, consequence, or implication.
+    a concrete event OR
+    measurable consequence OR
+    verified incident OR
+    quantifiable outcome
 
-    LENGTH:
+    Forbidden openings:
 
-    * Target 90-120 words all over Ids, like if 5 IDS then each ID will contain around 24 words. 
-    * Maximum 140 words.
+    background explanations
+    historical framing
+    vague setups (“over time”, “through history”, etc.)
 
-    OUTPUT:
-    Return only the final narration script.
+    STRUCTURE (MANDATORY FLOW):
+    Sentence 1: Core factual event or outcome
+    Sentence 2-3: Key mechanism or cause
+    Sentence 4-5: Consequence or broader impact
+
+    STYLE RULE:
+    Neutral, factual, high-density informational narration.
+    No “AI documentary voice”.
+
+    OUTPUT RULE:
+    Return ONLY final script text.
+    No labels.
+    No formatting.
+    No explanations.
+
+    
+    IMPORTANT:
+    This is a short-form documentary.
+    You must compress the material into a maximum of one hundred twenty words and a maximum of five spoken segments.
+
+    Do not cover all research if it exceeds the time budget.
+    Select only the highest-value facts.
+
+
+    TOPIC: {topic}
+
+    INFORMATION: {information}
     """
 
     agent = create_agent(

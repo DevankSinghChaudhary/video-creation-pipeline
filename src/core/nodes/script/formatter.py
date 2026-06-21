@@ -23,65 +23,89 @@ def Formatter(state: GlobalInformationState):
 
 
     prompt = f"""
-    You will receive documentary narration.
-
-    Your task is to optimize it ONLY for natural TTS delivery.
+    You will receive a documentary narration script.
 
     INPUT SCRIPT:
     {script}
 
     TASK:
-
-    Reformat the script for speech synthesis.
+    Refine this script only for TTS delivery.
 
     IMPORTANT:
+    - Preserve all meaning exactly.
+    - Preserve all facts, names, dates, and sequence.
+    - Convert all numbers into fully spoken words.
+    - Fix only unnatural spoken flow if necessary.
+    - Do not add or remove information.
+    - Do not rewrite for creativity.
 
-    - Preserve ALL meaning exactly.
-    - Preserve ALL facts, names, dates, and numbers.
-    - Do NOT add new information.
-    - Do NOT remove information.
-    - Do NOT change sequence of events.
-    - Do NOT rewrite for creativity.
+    PUNCTUATION RULES:
 
-    STRICT PAUSE RULES:
+    Use punctuation for speech timing, not formal writing.
 
-    - Never place pauses between grammatically connected words.
-    - Never split subject and verb.
-    - Never split verb and object.
-    - Never split names, dates, or statistics.
-    - Never use ellipses unless the pause is intentional and natural.
-    - If unsure, use a period instead.
-    - Grammar always has priority over dramatic pacing.
+    - Periods create full stops and should control major breath points.
+    - Commas should only separate clauses that are naturally spoken together.
+    - Never stack multiple commas in one sentence unless unavoidable.
+    - Avoid commas before short trailing phrases.
+    - Prefer splitting long comma-heavy sentences into separate sentences.
+    - Use em-dashes only for hard tonal shifts or sharp factual pivots.
+    - Use ellipses only for intentional dramatic hesitation and rarely.
 
-    OPTIMIZATION GOALS:
+    TTS RHYTHM RULES:
 
-    - Add punctuation where needed for natural pauses.
-    - Convert awkward line breaks into spoken rhythm.
-    - Break long dense sentences into smaller speakable units.
-    - Merge overly fragmented short lines if they sound unnatural.
-    - Improve breathing rhythm.
-    - Improve prosody.
-    - Improve emphasis using punctuation only.
-    - Improve pacing for documentary narration.
-    - Make the output sound human when read by TTS.
+    - Each sentence should carry one primary spoken idea.
+    - Avoid more than one major pause inside a sentence.
+    - If a sentence contains two unrelated facts, split them.
+    - If two sentences are too short and sound choppy, merge them.
+    - Prefer uneven sentence lengths for natural cadence.
+    - Alternate short and medium sentence lengths when possible.
+    - Avoid repetitive sentence openings.
+    - Avoid back-to-back identical rhythm structures.
 
-    PACING RULES:
+    BREATH RULE:
 
-    - Use periods for major pauses.
-    - Use commas for smaller pauses.
-    - Use ellipses (...) for dramatic heavier pauses.
-    - Use em dashes (—) for sharp interruptions or transitions.
-    - Avoid run-on sentences.
-    - Avoid over-fragmentation.
-    - Avoid robotic clause stacking.
+    Every sentence should be speakable in one natural breath unless the content requires emphasis.
+    If it feels breath-heavy, split it.
+    If it feels too fragmented, merge it.
 
-    GOAL:
+    WORD FORMATTING RULE:
 
-    The final output should sound like a professional documentary narrator speaking naturally.
+    When converting numbers into spoken words:
 
-    OUTPUT:
+    - Never hyphenate compound numbers.
+    - Always separate compound number words with spaces.
 
-    Return only the final formatted narration.
+    Examples:
+    - forty five (correct)
+    - sixty two (correct)
+    - one hundred twenty three (correct)
+    etc
+
+    Forbidden:
+    - forty-five
+    - sixty-two
+    - one-hundred
+    etc
+    
+    Also:
+    - state-on-state
+    - full-scale
+    etc
+
+    Reason:
+    Hyphens can introduce unnatural pauses or segmentation in TTS engines.
+
+    All number words must be space-separated for smoother pronunciation.
+
+    PAUSE PRIORITY:
+
+    Meaning > grammar > pacing.
+
+    If punctuation improves grammar but hurts speech flow, prefer speech flow.
+    
+    IMPORTANT NOTE: TTS models do not care about grammer pauses(often times break the flow), its purely based on our formatting. 
+    
+    Return only the final TTS-safe narration.
     """
 
     agent = create_agent(
@@ -97,7 +121,7 @@ def Formatter(state: GlobalInformationState):
             'content': prompt
         }
     })
-    print('Writer: ', time.time() - t)
+    print('Formatter: ', time.time() - t)
     result = result['structured_response']
     return {
         'script': result
