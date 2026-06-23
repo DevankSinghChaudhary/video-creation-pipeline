@@ -17,3 +17,4 @@ class GlobalInformationState(TypedDict):
         list[AudioSegment],
         operator.add
         ]
+    timing: list[str]

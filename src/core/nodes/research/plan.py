@@ -8,9 +8,10 @@ from qdrant_client import QdrantClient
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 
-from core.prompt import get_systemprompt 
+from core.prompt import get_systemprompt
 from core.tools.web_search import web_search
 from core.tools.date_time import get_date_time
+from core.nodes.research.tools.intent import intent
 from core.nodes.state.research.state import PlannerState  
 from core.nodes.state.globalstate import GlobalInformationState
 
@@ -34,7 +35,7 @@ def Planner(state: GlobalInformationState):
         {topic}
 
         [Task]
-        Analyze the provided topic and break it down into a highly granular, structurally sequenced list of domains and goals for a 20-to-30 minute motion graphics documentary.
+        Analyze the provided topic and break it down into a highly granular, structurally sequenced list of domains and goals for a 30-40s typography video creation.
 
         [Execution Guidelines]
         1. Target Scope: Generate between 5-10 strict highly specific domains. Focus on technical depth, core physics, and architectural engineering over generic overviews.
@@ -46,7 +47,7 @@ def Planner(state: GlobalInformationState):
         model = model,
         system_prompt = system_prompt,
         response_format = PlannerState,
-        tools = [web_search, get_date_time] 
+        tools = [web_search, get_date_time, intent] 
         )
     import time
     t = time.time()

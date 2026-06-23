@@ -1,5 +1,6 @@
 """Main entry point of the pipeline."""
 import time
+import subprocess
 
 from langgraph.graph import StateGraph, START, END
 
@@ -9,14 +10,9 @@ from core.nodes.script.script import Writer
 from core.nodes.script.formatter import Formatter
 from core.nodes.audio.voice import Voice, FanoutScript
 from core.nodes.audio.merger import MergeAudio
-from core.nodes.director.agent.illustrator import Illustrator
-from core.nodes.director.agent.director import Director
-from core.nodes.layout.layoutplanner import Layoutplanner
-from core.nodes.layout.worldlayout import Worldplanner
+from core.nodes.whisper.whisper import Timing
 
 from core.user import user_input
-
-
 
 
 def main(state: GlobalInformationState):
@@ -29,13 +25,15 @@ def main(state: GlobalInformationState):
     builder.add_node('Voice', Voice)
     builder.add_node('Formatter',Formatter)
     builder.add_node('MergeAudio', MergeAudio)
+    builder.add_node('Timing', Timing)
 
     builder.add_edge(START, 'Planner')
     builder.add_edge('Planner', 'Writer')
     builder.add_edge('Writer', 'Formatter')
     builder.add_conditional_edges('Formatter', FanoutScript)
     builder.add_edge('Voice', 'MergeAudio')
-    builder.add_edge('MergeAudio', END)
+    builder.add_edge('MergeAudio', 'Timing')
+    builder.add_edge('Timing', END)
 
     graph = builder.compile()
 
@@ -44,7 +42,8 @@ def main(state: GlobalInformationState):
     result = graph.invoke({
         'topic': topic,
         'information': [],
-        'script': []
+        'script': [],
+        'timing': []
         })
     
     print(f'Total Time: {time.time()-st}')

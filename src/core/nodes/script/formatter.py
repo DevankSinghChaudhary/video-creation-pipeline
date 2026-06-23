@@ -91,7 +91,7 @@ def Formatter(state: GlobalInformationState):
     - state-on-state
     - full-scale
     etc
-
+    Tip: Don't use hyphen '-' at all.
     Reason:
     Hyphens can introduce unnatural pauses or segmentation in TTS engines.
 

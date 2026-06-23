@@ -8,7 +8,10 @@ from pathlib import Path
 
 path = './output'
 
-shutil.rmtree(path)
+try:
+    shutil.rmtree(path)
+except: 
+    pass
 
 def FanoutScript(state: GlobalInformationState):
     return [
@@ -18,11 +21,11 @@ def FanoutScript(state: GlobalInformationState):
         for script in state['script'].script_ 
     ]
 
+
+
 def Voice(state: GlobalInformationState):
-
+    tts_client = Client("http://127.0.0.1:7860")
     s = time.time()
-
-    tts_client = Client('http://127.0.0.1:7860')
     
     scene_id = str(state["script_for_tts"].id)
 
