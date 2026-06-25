@@ -18,8 +18,8 @@ def MergeAudio(state: GlobalInformationState):
     for file in sorted_audio:
         combined += AudioSegment.from_wav(file)
 
-    combined.export("./output/final.wav", format="wav")
+    combined.export("./src/core/nodes/audio/output/final.wav", format="wav")
 
     print(f'Merger: {time.time()-s}')
 
-    return {"audio": ["./output/final.wav"]}
+    return {"audio": ["./src/core/nodes/audio/output/final.wav"]}

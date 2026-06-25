@@ -6,7 +6,7 @@ from gradio_client import Client, handle_file
 from langgraph.types import Send  
 from pathlib import Path
 
-path = './output'
+path = './src/core/nodes/audio/output/'
 
 try:
     shutil.rmtree(path)
@@ -44,11 +44,11 @@ def Voice(state: GlobalInformationState):
     
     temp_path = result[0]
 
-    output_dir = "./output"
-    os.makedirs(output_dir, exist_ok=True)
+
+    os.makedirs(path, exist_ok=True)
     ext = os.path.splitext(temp_path)[1]
 
-    final_destination = os.path.join(output_dir, f"{scene_id}{ext}")
+    final_destination = os.path.join(path, f"{scene_id}{ext}")
     
     shutil.move(temp_path, final_destination)
 
