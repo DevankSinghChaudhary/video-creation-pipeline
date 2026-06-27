@@ -1,10 +1,14 @@
 // Composition.tsx
 import React from "react";
+import json from "./schema.json"
+
 
 interface MyCompositionProps {
   headline: string;
   subheading: string;
 }
+
+export const durationInFrame = 300
 
 export const MyComposition: React.FC<MyCompositionProps> = ({
   headline,

@@ -53,5 +53,4 @@ def intent(topic):
                 }
         }
     )
-    result = result['structured_responses']
-    return {'intent': result}
+    return {'intent': result['structured_response']}

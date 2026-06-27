@@ -5,7 +5,7 @@ from core.nodes.state.globalstate import GlobalInformationState
 
 
 def MergeAudio(state: GlobalInformationState):
-    
+
     s = time.time()
 
     combined = AudioSegment.empty()
@@ -18,8 +18,10 @@ def MergeAudio(state: GlobalInformationState):
     for file in sorted_audio:
         combined += AudioSegment.from_wav(file)
 
-    combined.export("./src/core/nodes/audio/output/final.wav", format="wav")
+    output_path = r"D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\public\voice.mp3"
 
-    print(f'Merger: {time.time()-s}')
+    combined.export(output_path, format="mp3")
 
-    return {"audio": ["./src/core/nodes/audio/output/final.wav"]}
+    print(f"Merger: {time.time()-s}")
+
+    return {"audio": [output_path]}

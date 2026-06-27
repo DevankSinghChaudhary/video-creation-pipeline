@@ -1,17 +1,20 @@
 """Main entry point of the pipeline."""
 import time
+import json
+import os
+import shutil
 import subprocess
 
 from langgraph.graph import StateGraph, START, END
 
 from core.nodes.state.globalstate import GlobalInformationState 
-from core.nodes.research.plan import Planner
-from core.nodes.script.script import Writer
-from core.nodes.script.formatter import Formatter
+from core.nodes.research.agent.plan import Planner
+from core.nodes.script.agent.script import Writer
+from core.nodes.script.agent.formatter import Formatter
 from core.nodes.audio.voice import Voice, FanoutScript
 from core.nodes.audio.merger import MergeAudio
 from core.nodes.whisper.whisper import Timing
-
+from core.nodes.renderer.renderer import Renderer
 from core.user import user_input
 
 
@@ -26,6 +29,7 @@ def main(state: GlobalInformationState):
     builder.add_node('Formatter',Formatter)
     builder.add_node('MergeAudio', MergeAudio)
     builder.add_node('Timing', Timing)
+    builder.add_node('Renderer', Renderer)
 
     builder.add_edge(START, 'Planner')
     builder.add_edge('Planner', 'Writer')
@@ -33,7 +37,8 @@ def main(state: GlobalInformationState):
     builder.add_conditional_edges('Formatter', FanoutScript)
     builder.add_edge('Voice', 'MergeAudio')
     builder.add_edge('MergeAudio', 'Timing')
-    builder.add_edge('Timing', END)
+    builder.add_edge('Timing', 'Renderer')
+    builder.add_edge('Renderer', END)
 
     graph = builder.compile()
 
@@ -47,6 +52,15 @@ def main(state: GlobalInformationState):
         })
     
     print(f'Total Time: {time.time()-st}')
+    
+    try:
+        shutil.rmtree('D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json')
+    except: 
+        pass
+
+        with open(r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json', 'w') as file:
+            json.dump(result['timing'], file, indent=2)
+
     return result
 
 

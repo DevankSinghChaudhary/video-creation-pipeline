@@ -1,7 +1,7 @@
 // Root.tsx
 import "./index.css";
 import { Composition, getInputProps } from "remotion";
-import { MyComposition } from "./Composition";
+import { MyComposition, durationInFrame } from "./Composition";
 
 interface VideoProps {
   headline?: string;
@@ -14,7 +14,7 @@ export const RemotionRoot: React.FC = () => {
   const {
     headline = "QUANTUM BREEDER",
     subheading = "Extracting maximum structural energy efficiency via closed loop cycles.",
-    durationInFrames = 900, // Default 30 seconds at 30fps
+    durationInFrames = durationInFrame,
   } = getInputProps() as VideoProps;
 
   return (
@@ -24,7 +24,7 @@ export const RemotionRoot: React.FC = () => {
         component={MyComposition}
         durationInFrames={durationInFrames}
         fps={30}
-        width={1080}  // 1080x1920 is standard vertical format for shorts/reels
+        width={1080} 
         height={1920}
         defaultProps={{
           headline,
