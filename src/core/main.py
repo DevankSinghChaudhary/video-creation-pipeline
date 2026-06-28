@@ -21,12 +21,16 @@ from core.user import user_input
 def main(state: GlobalInformationState):
     
     scene_path = r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json'
+    mp3_path = r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\public\voice.mp3'
+    video_path = r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\out\video.mp4'
 
-    try:
-        if os.path.exists(scene_path):
-            os.remove(scene_path)
-    except Exception:
-        pass
+    for path in [scene_path, mp3_path, video_path]:
+        try:
+            if os.path.exists(path):
+                os.remove(path)
+        except Exception:
+            pass
+
 
     builder = StateGraph(state)
 
@@ -63,4 +67,7 @@ def main(state: GlobalInformationState):
 
 if __name__ == "__main__":
     state = main(GlobalInformationState)
-    print(state)
+    print(state['topic'])
+    print()
+    print()
+    print(state['script'])
