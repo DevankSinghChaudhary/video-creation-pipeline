@@ -16,6 +16,7 @@ type TimingWord = {
 const FPS = 30;
 
 const timing: TimingWord[] = Scene;
+const WORDS_PER_SCENE = 5;
 
 const WordBlock: React.FC<{ word: TimingWord }> = ({ word }) => {
   const frame = useCurrentFrame();
@@ -37,6 +38,23 @@ const WordBlock: React.FC<{ word: TimingWord }> = ({ word }) => {
 };
 
 export const TypographyVideo: React.FC = () => {
+  const frame = useCurrentFrame();
+  const currentTime = frame / FPS;
+
+  const currentWordIndex = timing.findIndex(
+  (word) => currentTime < word.end
+  );
+
+  const sceneIndex =
+    currentWordIndex === -1
+      ? 0
+      : Math.floor(currentWordIndex / WORDS_PER_SCENE);
+
+  const visibleWords = timing.slice(
+    sceneIndex * WORDS_PER_SCENE,
+    (sceneIndex + 1) * WORDS_PER_SCENE
+  );
+
   return (
     <AbsoluteFill
       style={{
@@ -45,9 +63,10 @@ export const TypographyVideo: React.FC = () => {
         backgroundColor: "#EDEADE"
       }}
     >
-      <Html5Audio src={staticFile("voice.mp3")} 
+      <Html5Audio
+        src={staticFile("voice.mp3")}
         volume={1}
-        />
+      />
 
       <div
         style={{
@@ -55,8 +74,8 @@ export const TypographyVideo: React.FC = () => {
           flexWrap: "wrap",
           justifyContent: "center",
           alignItems: "center",
-          fontSize: 95,
-          fontWeight: 800,
+          fontSize: 50,
+          fontWeight: 400,
           color: "#880808",
           fontFamily: "system-ui",
           maxWidth: "80%",
@@ -64,7 +83,7 @@ export const TypographyVideo: React.FC = () => {
           lineHeight: 1.2
         }}
       >
-        {timing.map((word, index) => (
+        {visibleWords.map((word, index) => (
           <WordBlock key={index} word={word} />
         ))}
       </div>

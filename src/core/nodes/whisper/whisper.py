@@ -1,3 +1,4 @@
+import os
 import json
 import time
 import subprocess
@@ -16,9 +17,6 @@ def Timing(state):
         text=True
     )
 
-    print(result.stdout)
-    print(result.stderr)
-
     output = result.stdout.strip().splitlines()[-1]
     
     if result.returncode != 0:
@@ -30,4 +28,13 @@ def Timing(state):
     json_start = output.find("[")
     output = output[json_start:]
     print(f'Whisper: {time.time()-st}')
+
+    scene_path = r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json'
+    temp_path = scene_path + ".tmp"
+
+    with open(temp_path, "w", encoding="utf-8") as file:
+        json.dump(json.loads(output), file, indent=2)
+
+    os.replace(temp_path, scene_path)
+
     return {"timing": json.loads(output)}

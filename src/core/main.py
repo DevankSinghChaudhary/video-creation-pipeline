@@ -20,6 +20,13 @@ from core.user import user_input
 
 def main(state: GlobalInformationState):
     
+    scene_path = r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json'
+
+    try:
+        if os.path.exists(scene_path):
+            os.remove(scene_path)
+    except Exception:
+        pass
 
     builder = StateGraph(state)
 
@@ -52,17 +59,7 @@ def main(state: GlobalInformationState):
         })
     
     print(f'Total Time: {time.time()-st}')
-    
-    try:
-        shutil.rmtree('D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json')
-    except: 
-        pass
-
-        with open(r'D:\Projects\Applications\Video-Editing-Pipeline\src\core\video-rendering\src\scene.json', 'w') as file:
-            json.dump(result['timing'], file, indent=2)
-
     return result
-
 
 if __name__ == "__main__":
     state = main(GlobalInformationState)
