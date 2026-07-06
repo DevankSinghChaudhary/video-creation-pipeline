@@ -5,111 +5,128 @@ from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 
+from core.nodes.retries import with_retry
+from core.nodes.script.tools.FactsSelector import FactSelectorAgent
+from core.nodes.script.tools.NarrativeFlow import NarrativeFlowBuilder
+from core.nodes.script.tools.ContinuityAgent import ContinuityAgent
+
 from core.nodes.script.state.ScriptWriter import ScriptState
 from core.nodes.state.globalstate import GlobalInformationState
 from core.prompt import get_systemprompt
 
 load_dotenv()
+
 model = ChatOpenAI(
-    model = 'mistral-large-latest',
+    model = 'ministral-14b-2512',
     base_url = 'https://api.mistral.ai/v1',
     api_key = os.getenv('MISTRALAI_API_KEY')
 )
 
 system_prompt = get_systemprompt("writer")
 
+
+@with_retry
 def Writer(state: GlobalInformationState):
+
+    print(f'[Writer] Started Processing')
+    st = time.time()
+
     topic = state['topic']
     information = state['information']
-
-
+    
     prompt = f"""
     ROLE:
-    Elite documentary narration engine.
+    Documentary narration writer.
 
     TASK:
-    Convert provided structured research units into a single continuous documentary narration.
+    Convert the provided ordered factual units into one continuous short-form documentary narration.
 
     CORE RULE:
-    Use ONLY provided information. No invention. No stylistic padding. No external knowledge.
+    Use only provided information.
+    Do not invent facts.
+    Do not add external knowledge.
+    Do not add filler.
 
-    SPOKEN REALISM RULE:
-    The output must sound like natural spoken documentary narration, not written explanation.
+    SPOKEN REALISM:
+    The output must sound natural when spoken.
 
-    To achieve this:
+    Rules:
 
-    Vary sentence length (short, medium, slightly extended)
-    Allow 1-2 sentence fusions when facts are tightly related
-    Do NOT make every sentence equal in weight
-    Avoid explicit “this led to that” explanation chains unless necessary
-    Prefer implication over over-explanation when causality is obvious from context
-    Reduce repetitive grammatical structures across consecutive sentences
+    * Vary sentence length naturally
+    * Avoid repetitive sentence structures
+    * Allow sentence fusion when facts are tightly connected
+    * Prefer natural spoken rhythm over rigid written form
+    * Avoid over-explaining obvious causal relationships
 
-    ❌ BAN LIST (STRONG ADDITION)
+    BANNED:
 
-    Remove these patterns entirely:
-    “This X marked Y”
-    “It also made a decision”
-    “That alliance had been built on…”
-    “The question is no longer X—but Y” (overused AI documentary closure form)
-    symmetrical sentence chaining (“A happened. B happened. C happened.” rhythm)
-    
-    HARD CONSTRAINTS:
-
-    30-40 seconds spoken duration
-    50-60 words target
-    max 80 words absolute
-    one unified narration (NOT per ID breakdown in output)
-    no formatting, no labels, no structure markers
+    * Generic documentary phrases
+    * Filler phrases
+    * Commentary phrases
+    * Rhetorical questions
+    * Artificial suspense
+    * Dramatic closers
+    * Symmetrical repetitive sentence rhythm
 
     CONTENT RULES:
 
-    Every sentence must introduce new factual information
-    No repetition or paraphrasing of same idea
-    No filler, no setup phrases, no commentary language
-    No generic documentary phrases (“this reveals”, “this highlights”, “it is important to note”)
-    No emotional framing unless explicitly in data
-    No rhetorical questions
-    No transitions like “meanwhile”, “in turn”, “today”, unless factually required
+    * Every sentence must add new factual information
+    * No repetition
+    * No paraphrasing of the same fact
+    * No emotional exaggeration
+    * No vague setup phrases
 
-    FIRST SENTENCE RULE (STRICT):
-    Must begin with:
+    OPENING RULE:
+    Start with the strongest concrete event, incident, or measurable fact.
 
-    a concrete event OR
-    measurable consequence OR
-    verified incident OR
-    quantifiable outcome
+    Never start with:
 
-    Forbidden openings:
+    * background
+    * broad context
+    * vague historical framing
 
-    background explanations
-    historical framing
-    vague setups (“over time”, “through history”, etc.)
+    LENGTH:
 
-    STRUCTURE (MANDATORY FLOW):
-    Sentence 1: Core factual event or outcome
-    Sentence 2-3: Key mechanism or cause
-    Sentence 4-5: Consequence or broader impact
+    * Target: 50-60 words
+    * Hard max: 80 words
 
-    STYLE RULE:
-    Neutral, factual, high-density informational narration.
-    No “AI documentary voice”.
+    STYLE:
+    Neutral.
+    Dense.
+    Factual.
+    Natural spoken documentary narration.
 
-    OUTPUT RULE:
-    Return ONLY final script text.
-    No labels.
-    No formatting.
-    No explanations.
+    OUTPUT:
+    Return only the final narration text.
 
-    
-    IMPORTANT:
-    This is a short-form documentary.
-    You must compress the material into a maximum of one hundred twenty words and a maximum of five spoken segments.
+    TOOLS:
 
-    Do not cover all research if it exceeds the time budget.
-    Select only the highest-value facts.
-    
-    
+    FactSelectorAgent:
+    Use when the available information is too large, redundant, or exceeds the time budget.
+    Purpose: select only the highest-value factual units.
+    Input:
+    - topic
+    - intent
+    - information
+
+    NarrativeFlowBuilder:
+    Use after fact selection when factual units need ordering.
+    Purpose: arrange selected facts into strongest documentary progression.
+    Input:
+    - topic
+    - intent
+    - selected_facts
+
+    ContinuityAgent:
+    Use after narrative flow building and script generation when the factual sequence or written narration needs structural validation.
+    Purpose: inspect factual order and script continuity for chronology, causality, missing bridges, escalation flow, redundancy, and context gaps.
+    It does not rewrite, repair, reorder, or add facts. It only validates structural integrity.
+    Input:
+    - topic
+    - intent
+    - ordered_facts
+    - script
+
     TOPIC: {topic}
     INFORMATION: {information}
     """
@@ -117,18 +134,21 @@ def Writer(state: GlobalInformationState):
     agent = create_agent(
         model = model,
         system_prompt = system_prompt,
-        response_format = ScriptState
+        response_format = ScriptState,
+        tools = [FactSelectorAgent, NarrativeFlowBuilder,ContinuityAgent]
     )
     
-    t = time.time()
     result = agent.invoke({
         'messages':{
             'role':'user',
             'content': prompt
         }
     })
-    print('Writer: ', time.time() - t)
     result = result['structured_response']
+    
+    print(f'[Writer] Finished Successfully')
+    print(f'[Writer] {time.time()-st}')
+    
     return {
         'script': result
     }

@@ -1,10 +1,11 @@
 import os
 import shutil
 import time
+from core.nodes.retries import with_retry
 from core.nodes.state.globalstate import GlobalInformationState
 from gradio_client import Client, handle_file
 from langgraph.types import Send  
-from pathlib import Path
+
 
 path = './src/core/nodes/audio/output/'
 
@@ -22,8 +23,12 @@ def FanoutScript(state: GlobalInformationState):
     ]
 
 
-
+@with_retry
 def Voice(state: GlobalInformationState):
+
+    if not state['script_for_tts'].script:
+        raise ValueError("Script Empty!")
+
     tts_client = Client("http://127.0.0.1:7860")
     s = time.time()
     

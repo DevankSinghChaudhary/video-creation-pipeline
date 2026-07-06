@@ -7,3 +7,4 @@ class summary(BaseModel):
 class PlannerState(BaseModel):
     info_sources: list[str]
     summary_of_information: list[summary]
+    intent: dict

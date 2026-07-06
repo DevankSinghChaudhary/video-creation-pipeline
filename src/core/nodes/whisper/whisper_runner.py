@@ -3,7 +3,6 @@ import whisperx
 import json
 import sys
 
-
 audio_path = sys.argv[1]
 
 model = whisperx.load_model("small", "cuda")
@@ -21,5 +20,4 @@ aligned = whisperx.align(
     audio_path,
     "cuda"
 )
-
 print(json.dumps(aligned["word_segments"]))

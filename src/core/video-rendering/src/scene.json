@@ -1,0 +1,374 @@
+[
+  {
+    "word": "India",
+    "start": 0.391,
+    "end": 0.711,
+    "score": 0.898
+  },
+  {
+    "word": "achieved",
+    "start": 0.751,
+    "end": 1.091,
+    "score": 0.823
+  },
+  {
+    "word": "criticality",
+    "start": 1.131,
+    "end": 1.751,
+    "score": 0.845
+  },
+  {
+    "word": "in",
+    "start": 1.771,
+    "end": 1.831,
+    "score": 0.812
+  },
+  {
+    "word": "its",
+    "start": 1.871,
+    "end": 1.971,
+    "score": 0.736
+  },
+  {
+    "word": "Kalpakam",
+    "start": 2.011,
+    "end": 2.652,
+    "score": 0.777
+  },
+  {
+    "word": "3",
+    "start": 2.732,
+    "end": 2.972,
+    "score": 0.349
+  },
+  {
+    "word": "fast",
+    "start": 3.032,
+    "end": 3.412,
+    "score": 0.741
+  },
+  {
+    "word": "breeder",
+    "start": 3.492,
+    "end": 3.792,
+    "score": 0.927
+  },
+  {
+    "word": "reactor",
+    "start": 3.832,
+    "end": 4.312,
+    "score": 0.93
+  },
+  {
+    "word": "on",
+    "start": 4.512,
+    "end": 4.572,
+    "score": 0.982
+  },
+  {
+    "word": "October",
+    "start": 4.672,
+    "end": 5.132,
+    "score": 0.851
+  },
+  {
+    "word": "10,",
+    "start": 5.312,
+    "end": 5.752,
+    "score": 0.737
+  },
+  {
+    "word": "2023.",
+    "start": 6.072,
+    "end": 6.933,
+    "score": 0.539
+  },
+  {
+    "word": "This",
+    "start": 7.453,
+    "end": 7.613,
+    "score": 0.812
+  },
+  {
+    "word": "positions",
+    "start": 7.673,
+    "end": 8.173,
+    "score": 0.842
+  },
+  {
+    "word": "India",
+    "start": 8.233,
+    "end": 8.553,
+    "score": 0.763
+  },
+  {
+    "word": "among",
+    "start": 8.673,
+    "end": 8.913,
+    "score": 0.832
+  },
+  {
+    "word": "a",
+    "start": 8.933,
+    "end": 8.973,
+    "score": 0.489
+  },
+  {
+    "word": "select",
+    "start": 9.033,
+    "end": 9.353,
+    "score": 0.839
+  },
+  {
+    "word": "few",
+    "start": 9.373,
+    "end": 9.553,
+    "score": 0.891
+  },
+  {
+    "word": "nations",
+    "start": 9.593,
+    "end": 9.973,
+    "score": 0.828
+  },
+  {
+    "word": "with",
+    "start": 10.013,
+    "end": 10.173,
+    "score": 0.87
+  },
+  {
+    "word": "operational",
+    "start": 10.293,
+    "end": 10.913,
+    "score": 0.858
+  },
+  {
+    "word": "fast",
+    "start": 10.953,
+    "end": 11.274,
+    "score": 0.907
+  },
+  {
+    "word": "breeder",
+    "start": 11.354,
+    "end": 11.634,
+    "score": 0.875
+  },
+  {
+    "word": "technology.",
+    "start": 11.674,
+    "end": 12.374,
+    "score": 0.91
+  },
+  {
+    "word": "Developed",
+    "start": 13.194,
+    "end": 13.634,
+    "score": 0.918
+  },
+  {
+    "word": "as",
+    "start": 13.694,
+    "end": 13.774,
+    "score": 0.504
+  },
+  {
+    "word": "a",
+    "start": 13.834,
+    "end": 13.854,
+    "score": 0.999
+  },
+  {
+    "word": "milestone",
+    "start": 13.914,
+    "end": 14.474,
+    "score": 0.76
+  },
+  {
+    "word": "in",
+    "start": 14.514,
+    "end": 14.594,
+    "score": 0.521
+  },
+  {
+    "word": "India's",
+    "start": 14.634,
+    "end": 14.994,
+    "score": 0.825
+  },
+  {
+    "word": "nuclear",
+    "start": 15.054,
+    "end": 15.454,
+    "score": 0.807
+  },
+  {
+    "word": "program,",
+    "start": 15.514,
+    "end": 16.015,
+    "score": 0.764
+  },
+  {
+    "word": "it",
+    "start": 16.455,
+    "end": 16.515,
+    "score": 0.834
+  },
+  {
+    "word": "follows",
+    "start": 16.575,
+    "end": 16.975,
+    "score": 0.758
+  },
+  {
+    "word": "the",
+    "start": 17.035,
+    "end": 17.115,
+    "score": 0.798
+  },
+  {
+    "word": "2014",
+    "start": 17.175,
+    "end": 18.515,
+    "score": 0.588
+  },
+  {
+    "word": "commissioning",
+    "start": 18.595,
+    "end": 19.155,
+    "score": 0.911
+  },
+  {
+    "word": "of",
+    "start": 19.195,
+    "end": 19.275,
+    "score": 0.794
+  },
+  {
+    "word": "the",
+    "start": 19.315,
+    "end": 19.375,
+    "score": 0.999
+  },
+  {
+    "word": "prototype",
+    "start": 19.415,
+    "end": 19.995,
+    "score": 0.986
+  },
+  {
+    "word": "fast",
+    "start": 20.095,
+    "end": 20.416,
+    "score": 0.901
+  },
+  {
+    "word": "breeder",
+    "start": 20.476,
+    "end": 20.796,
+    "score": 0.895
+  },
+  {
+    "word": "reactor.",
+    "start": 20.856,
+    "end": 21.396,
+    "score": 0.836
+  },
+  {
+    "word": "Using",
+    "start": 22.056,
+    "end": 22.296,
+    "score": 0.787
+  },
+  {
+    "word": "fast",
+    "start": 22.376,
+    "end": 22.676,
+    "score": 0.846
+  },
+  {
+    "word": "neutrons,",
+    "start": 22.736,
+    "end": 23.276,
+    "score": 0.9
+  },
+  {
+    "word": "the",
+    "start": 23.536,
+    "end": 23.656,
+    "score": 0.736
+  },
+  {
+    "word": "reactor",
+    "start": 23.696,
+    "end": 24.116,
+    "score": 0.982
+  },
+  {
+    "word": "breeds",
+    "start": 24.156,
+    "end": 24.416,
+    "score": 0.805
+  },
+  {
+    "word": "plutonium",
+    "start": 24.456,
+    "end": 25.077,
+    "score": 0.871
+  },
+  {
+    "word": "from",
+    "start": 25.157,
+    "end": 25.277,
+    "score": 0.926
+  },
+  {
+    "word": "uranium-238",
+    "start": 25.397,
+    "end": 25.957,
+    "score": 0.906
+  },
+  {
+    "word": "directly",
+    "start": 27.307,
+    "end": 27.729,
+    "score": 0.888
+  },
+  {
+    "word": "enabling",
+    "start": 27.789,
+    "end": 28.21,
+    "score": 0.843
+  },
+  {
+    "word": "India's",
+    "start": 28.311,
+    "end": 28.692,
+    "score": 0.758
+  },
+  {
+    "word": "independent",
+    "start": 28.833,
+    "end": 29.415,
+    "score": 0.888
+  },
+  {
+    "word": "nuclear",
+    "start": 29.515,
+    "end": 29.896,
+    "score": 0.808
+  },
+  {
+    "word": "fuel",
+    "start": 29.916,
+    "end": 30.197,
+    "score": 0.905
+  },
+  {
+    "word": "cycle.",
+    "start": 30.258,
+    "end": 30.659,
+    "score": 0.973
+  }
+]

@@ -1,7 +1,7 @@
 **Language:** English
 
 ## NOTE (MUST READ)
-CONTENT IN THIS README IS OUTDATED, I CHANGED THE STRUCTURE OF PIPELINE. I AM TOO LAZY TO CHANGE THE WHOLE README.
+CONTENT IN THIS README IS OUTDATED, I CHANGED THE STRUCTURE OF PIPELINE (Simplefied it to a point where it generates 1 minute videos). I AM TOO LAZY TO CHANGE THE WHOLE README.
 THANK YOU FOR COOPERATION.
 
 --- 
@@ -21,16 +21,17 @@ AI-powered documentary and educational video generation pipeline built with Lang
 
 ## Overview
 
-Video Generating Pipeline is an AI-driven system that transforms a single topic into structured research, documentary scripts, and eventually production-ready video assets.
+Video Generating Pipeline is an AI driven system that transforms a single topic into structured research, documentary scripts, and eventually production-ready video assets.
 
 Instead of relying on a single prompt, the pipeline uses multiple specialized AI agents that work together to:
 
-* Generate research perspectives
-* Perform parallel domain research
+* Perform research
 * Extract and organize knowledge
-* Store information for retrieval
-* Generate long-form documentary scripts
-* Prepare assets for automated video production
+* Information retrieval
+* Generate short form documentary scripts
+* Convert into TTS Friendly script
+* Whisper used for getting that word spoken accuracy
+* Remotion then take over for rendering
 
 ---
 

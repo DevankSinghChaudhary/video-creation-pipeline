@@ -296,9 +296,15 @@ def web_search(
     max_results: int = 3,
 ):
 
-    return asyncio.run(
+    print(f'[web_search] Tool Called')
+    st = time.time()
+    result = asyncio.run(
         search_multi_async(
             queries,
             max_results,
         )
     )
+    print(f'[web_search] Call Finished')
+    print(f'[web_search] {time.time()-st}')
+    
+    return result

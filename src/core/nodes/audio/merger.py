@@ -2,8 +2,9 @@ import os
 import time
 from pydub import AudioSegment
 from core.nodes.state.globalstate import GlobalInformationState
+from core.nodes.retries import with_retry
 
-
+@with_retry
 def MergeAudio(state: GlobalInformationState):
 
     s = time.time()

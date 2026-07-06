@@ -16,7 +16,7 @@ type TimingWord = {
 const FPS = 30;
 
 const timing: TimingWord[] = Scene;
-const WORDS_PER_SCENE = 5;
+const WORDS_PER_SCENE = 8;
 
 const WordBlock: React.FC<{ word: TimingWord }> = ({ word }) => {
   const frame = useCurrentFrame();
@@ -60,12 +60,14 @@ export const TypographyVideo: React.FC = () => {
       style={{
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#EDEADE"
+        backgroundColor: "#eeeeee"
       }}
     >
       <Html5Audio
-        src={staticFile("voice.mp3")}
-        volume={1}
+        src={staticFile("voice.mp3")} volume={0.7} 
+        />
+       <Html5Audio 
+        src={staticFile("background.mp3")} volume={0.08}
       />
 
       <div
@@ -74,10 +76,10 @@ export const TypographyVideo: React.FC = () => {
           flexWrap: "wrap",
           justifyContent: "center",
           alignItems: "center",
-          fontSize: 50,
-          fontWeight: 400,
-          color: "#880808",
-          fontFamily: "system-ui",
+          fontSize: 60,
+          fontWeight: 800,
+          color: "#0088cc",
+          fontFamily: "monospace",
           maxWidth: "80%",
           textAlign: "center",
           lineHeight: 1.2
