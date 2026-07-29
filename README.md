@@ -1,8 +1,6 @@
 **Language:** English
-
-## NOTE (MUST READ)
-CONTENT IN THIS README IS OUTDATED, I CHANGED THE STRUCTURE OF PIPELINE (Simplefied it to a point where it generates 1 minute videos). I AM TOO LAZY TO CHANGE THE WHOLE README.
-THANK YOU FOR COOPERATION.
+> [!WARNING]
+> This Repository is not longer maintained. [New Repository](https://github.com/devankSinghChaudhary/VPipeline)
 
 --- 
 # Video Generating Pipeline
